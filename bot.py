@@ -26,10 +26,39 @@ def send_welcome(message):
     bot.reply_to(message, "👋 Salut ! Je suis ton bot crypto AiFutur_bot. Tape /news pour les dernières infos.")
 
 # Exemple : Commande /news
+import requests
+import random
+
 @bot.message_handler(commands=['news'])
 def send_news(message):
-    news = "🗞️ Exemple d'actualité : Bitcoin en hausse de 3% aujourd’hui."
-    bot.send_message(message.chat.id, news)
+    try:
+        # 1️⃣ On combine crypto + économie mondiale
+        sources = [
+            "https://min-api.cryptocompare.com/data/v2/news/?lang=EN",
+            "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=14f6c631a9d24fca9ee18d7f0a64b7c2"
+        ]
+
+        crypto_news = requests.get(sources[0]).json()
+        eco_news = requests.get(sources[1]).json()
+
+        # 2️⃣ Sélection aléatoire de 2 news crypto + 1 économique
+        result = "🗞️ *Dernières nouvelles du marché :*\n\n"
+
+        for i in range(2):
+            n = crypto_news["Data"][i]
+            result += f"💰 *{n['title']}*\n👉 {n['url']}\n\n"
+
+        for i in range(1):
+            n = eco_news["articles"][i]
+            result += f"🌍 *{n['title']}*\n👉 {n['url']}\n\n"
+
+        result += "_Actualisé automatiquement via API (CryptoCompare + NewsAPI)_"
+
+        bot.send_message(message.chat.id, result, parse_mode="Markdown")
+
+    except Exception as e:
+        bot.send_message(message.chat.id, f"⚠️ Erreur lors de la récupération des news : {e}")
+
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
