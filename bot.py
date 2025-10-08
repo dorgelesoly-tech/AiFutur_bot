@@ -35,7 +35,7 @@ def send_news(message):
         # 1️⃣ On combine crypto + économie mondiale
         sources = [
             "https://min-api.cryptocompare.com/data/v2/news/?lang=EN",
-            "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=14f6c631a9d24fca9ee18d7f0a64b7c2"
+            "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=218db5fcb2844e7cac6c91c6158a9b87"
         ]
 
         crypto_news = requests.get(sources[0]).json()
@@ -58,7 +58,6 @@ def send_news(message):
 
     except Exception as e:
         bot.send_message(message.chat.id, f"⚠️ Erreur lors de la récupération des news : {e}")
-
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
